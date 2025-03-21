@@ -20,7 +20,7 @@ for file in [DATA_FILE, LOG_FILE]:
 def handle_request():
     # Get headers from the request
     auth_header = request.headers.get('Authorization')
-    special_key_header = request.headers.get('Special Key')
+    special_key_header = request.headers.get('SpecialKey')
 
     # Validate headers
     if auth_header != EXPECTED_AUTH or special_key_header != EXPECTED_SPECIAL_KEY:
