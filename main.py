@@ -7,15 +7,14 @@ app = Flask(__name__)
 EXPECTED_AUTH = "Sentinel/Anticheat"
 EXPECTED_SPECIAL_KEY = "___CELESTIAL_CLIENT_KEY.DO_NOT_SHARE_OR_SCREENSHARE_THIS.FDSAFJ129JI31029I312931J2931J2391J0231902J31902J3192J"
 
-# File path
+# File paths
 DATA_FILE = "received_data.txt"
 LOG_FILE = "request_log.txt"
 
-# Ensure the file exists
+# Ensure the files exist and initialize them
 for file in [DATA_FILE, LOG_FILE]:
-    if not os.path.exists(file):
-        with open(file, "w") as f:
-            f.write("")
+    with open(file, "w") as f:
+        f.write("# Log initialized\n")
 
 @app.route('/requests', methods=['POST'])
 def handle_request():
@@ -48,8 +47,6 @@ def handle_request():
 
 @app.route('/received_data.txt', methods=['GET'])
 def get_data_file():
-    if not os.path.exists(DATA_FILE):
-        return jsonify({"error": "Data file not found"}), 404
     return send_file(DATA_FILE, mimetype='text/plain')
 
 if __name__ == '__main__':
