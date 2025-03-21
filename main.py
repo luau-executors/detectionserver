@@ -9,6 +9,13 @@ EXPECTED_SPECIAL_KEY = "___CELESTIAL_CLIENT_KEY.DO_NOT_SHARE_OR_SCREENSHARE_THIS
 
 # File path
 DATA_FILE = "received_data.txt"
+LOG_FILE = "request_log.txt"
+
+# Ensure the file exists
+for file in [DATA_FILE, LOG_FILE]:
+    if not os.path.exists(file):
+        with open(file, "w") as f:
+            f.write("")
 
 @app.route('/requests', methods=['POST'])
 def handle_request():
@@ -28,9 +35,13 @@ def handle_request():
     # Format the data as "data data data"
     formatted_data = " ".join(str(value) for value in data.values())
 
-    # Append the formatted data to the file
+    # Append the formatted data to the received data file
     with open(DATA_FILE, "a") as file:
         file.write(formatted_data + "\n")
+    
+    # Log the request details
+    with open(LOG_FILE, "a") as log:
+        log.write(f"Received request: {data}\n")
 
     # Respond with success
     return jsonify({"message": "Request received", "data": data}), 200
