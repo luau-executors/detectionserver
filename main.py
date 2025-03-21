@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_file
 import os
 
 app = Flask(__name__)
@@ -7,12 +7,8 @@ app = Flask(__name__)
 EXPECTED_AUTH = "Sentinel/Anticheat"
 EXPECTED_SPECIAL_KEY = "___CELESTIAL_CLIENT_KEY.DO_NOT_SHARE_OR_SCREENSHARE_THIS.FDSAFJ129JI31029I312931J2931J2391J0231902J31902J3192J"
 
-# Directory for storing received data
-DATA_DIR = "static"
-DATA_FILE = os.path.join(DATA_DIR, "received_data.txt")
-
-# Ensure the directory exists
-os.makedirs(DATA_DIR, exist_ok=True)
+# File path
+DATA_FILE = "received_data.txt"
 
 @app.route('/requests', methods=['POST'])
 def handle_request():
@@ -41,7 +37,9 @@ def handle_request():
 
 @app.route('/received_data.txt', methods=['GET'])
 def get_data_file():
-    return send_from_directory(DATA_DIR, "received_data.txt")
+    if not os.path.exists(DATA_FILE):
+        return jsonify({"error": "Data file not found"}), 404
+    return send_file(DATA_FILE, mimetype='text/plain')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
