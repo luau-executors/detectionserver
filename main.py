@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 
 app = Flask(__name__)
 
@@ -33,6 +33,13 @@ def handle_request():
 
     # Respond with success
     return jsonify({"message": "Request received", "data": data}), 200
+
+@app.route('/data', methods=['GET'])
+def get_data():
+    try:
+        return send_file(DATA_FILE, mimetype='text/plain')
+    except FileNotFoundError:
+        return jsonify({"error": "Data file not found"}), 404
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
